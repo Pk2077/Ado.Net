@@ -1,0 +1,58 @@
+﻿@model WebApplication1.ViewModels.StudentFormViewModel
+
+<h2> Edit Student</h2>
+
+@using (Html.BeginForm("Save", "Students", FormMethod.Post))
+{
+    @Html.HiddenFor(s => s.Student.Id)
+    @Html.ValidationSummary(true, "Please fix the following errors:")
+
+    <div class="form-group">
+        @Html.LabelFor(s => s.Student.Name)
+        @Html.TextBoxFor(s => s.Student.Name, new { @class = "form-control" })
+        @Html.ValidationMessageFor(s => s.Student.Name)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(s => s.Student.DepartmentId)
+        @Html.DropDownListFor(s => s.Student.DepartmentId, new SelectList(Model.Departments, "Id", "Name", Model.Student.DepartmentId), "Select Department", new { @class = "form-control" })
+        @Html.ValidationMessageFor(s => s.Student.DepartmentId)
+    </div>
+
+    <div class="form-group">
+        <label>Courses</label>
+        <br />
+        @foreach (var course in Model.Courses)
+        {
+            bool isEnrolled = Model.Student.Courses.Any(c => c.Id == course.Id);
+            <label>
+                @Html.CheckBox("selectedCourses", isEnrolled, new { value = course.Id }) @course.Name
+            </label>
+            <br />
+        }
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+}
+
+@section Scripts {
+    <script>
+        // Disable the save button if any required field is empty
+        $(document).ready(function () {
+            $('#saveButton').prop('disabled', true);
+
+            $('input[type="text"], select').on('change', function () {
+                var isValid = true;
+
+                // Check if any required field is empty
+                $('input[type="text"], select').each(function () {
+                    if ($(this).val() === '') {
+                        isValid = false;
+                        return false; // Exit loop early
+                    }
+                });
+
+                $('#saveButton').prop('disabled', !isValid);
+            });
+        });
+    </script>
+}

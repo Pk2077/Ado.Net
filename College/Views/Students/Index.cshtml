@@ -1,0 +1,31 @@
+﻿@model List<WebApplication1.Models.Student>
+
+<h2>Students</h2>
+<p>
+    <a href="@Url.Action("New", "Students")" class="btn btn-primary">New Student</a>
+</p>
+<table id="students" class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Department</th>
+            <th>Courses</th>
+            <th>View</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var student in Model)
+        {
+            <tr>
+                <td>@student.Id</td>
+                <td>@student.Name</td>
+                <td>@student.Department.Name</td>
+                <td>@string.Join(", ", student.Courses.Select(c => c.Name))</td>
+                <td>
+                    <a href="@Url.Action("Details", "Students", new { id = student.Id })" class="btn btn-primary">View</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,56 @@
+﻿@model WebApplication1.ViewModels.StudentFormViewModel
+
+<h2>New Student</h2>
+
+@using (Html.BeginForm("Save", "Students", FormMethod.Post))
+{
+    @Html.ValidationSummary(true, "Please Fix")
+    @Html.ValidationSummary()
+
+    <div class="form-group">
+        @Html.LabelFor(s => s.Student.Name)
+        @Html.TextBoxFor(s => s.Student.Name, new { @class = "form-control" })
+        @Html.ValidationMessageFor(s => s.Student.Name)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(s => s.Student.DepartmentId)
+        @Html.DropDownListFor(s => s.Student.DepartmentId, new SelectList(Model.Departments, "Id", "Name"), "Select Department", new { @class = "form-control" })
+        @Html.ValidationMessageFor(s => s.Student.DepartmentId)
+    </div>
+    <div class="form-group">
+        @Html.Label("Courses")
+        <br />
+        @foreach (var course in Model.Courses)
+        {
+            <label>
+                @Html.CheckBox("selectedCourses", new { value = course.Id }) @course.Name
+            </label>
+            <br />
+        }
+    </div>
+
+    <button type="submit" id="saveButton" class="btn btn-primary">Save</button>
+}
+
+@section Scripts {
+    <script>
+        // Disable the save button if any required field is empty
+        $(document).ready(function () {
+            $('#saveButton').prop('disabled', true);
+
+            $('input[type="text"], select').on('change', function () {
+                var isValid = true;
+
+                // Check if any required field is empty
+                $('input[type="text"], select').each(function () {
+                    if ($(this).val() === '') {
+                        isValid = false;
+                        return false; // Exit loop early
+                    }
+                });
+
+                $('#saveButton').prop('disabled', !isValid);
+            });
+        });
+    </script>
+}

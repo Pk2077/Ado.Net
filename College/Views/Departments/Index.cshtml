@@ -1,0 +1,7 @@
+﻿@model IEnumerable<WebApplication1.Models.Department>
+@foreach(var dept in Model)
+{
+    @Html.DisplayFor(d=>dept.Id)
+    @Html.DisplayFor(d=>dept.Name)
+
+}
